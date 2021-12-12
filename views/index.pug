@@ -2,4 +2,23 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  table(style='width:100%', border='1')
+    tr
+      th #
+      th Name
+      th GP
+      th G 
+      th A
+      th PTS 
+      th P/GP
+      th Proj Pts
+    each data in table_data
+      tr
+        td #{data["number"]}
+        td #{data["name"]}
+        td #{data["gamesplayed"]}
+        td #{data["goals"]}
+        td #{data["assists"]}
+        td #{data["points"]}
+        td #{data["pointspergame"]}
+        td #{data["projected"]}
