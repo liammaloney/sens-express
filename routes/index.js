@@ -1,6 +1,7 @@
 var express = require('express');
 var axios = require('axios');
 var router = express.Router();
+const blacklist = {"9":["Colin White"]}
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -23,7 +24,7 @@ const statsObject = async () => {
   let players = await rosterStatistics(team_id, roster)
   
   players.sort(function(a, b){
-    return a.number - b.number;
+    return b.projected - a.projected;
   });
   return players
 };
@@ -37,7 +38,7 @@ const rosterStatistics = async (team_id, roster) => {
       "number": roster[i].jerseyNumber,
       "name": roster[i].person.fullName
     };
-    if (roster[i].position.code != "G") {
+    if (roster[i].position.code != "G" && !blacklist[team_id].includes(roster[i].person.fullName)) {
       players.push(player_data)
       stats = await playerStats(team_id, roster[i], player_data)
     }
