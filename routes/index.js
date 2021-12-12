@@ -21,7 +21,6 @@ const statsObject = async () => {
   const roster = res.data.roster;
 
   let players = await rosterStatistics(team_id, roster)
-  console.log(players)
   
   players.sort(function(a, b){
     return a.number - b.number;
@@ -38,9 +37,10 @@ const rosterStatistics = async (team_id, roster) => {
       "number": roster[i].jerseyNumber,
       "name": roster[i].person.fullName
     };
-    players.push(player_data)
-    stats = await playerStats(team_id, roster[i], player_data)
-    players.push(stats);
+    if (roster[i].position.code != "G") {
+      players.push(player_data)
+      stats = await playerStats(team_id, roster[i], player_data)
+    }
   }
   return players
 };
@@ -58,7 +58,7 @@ const playerStats = async (team_id, player_res, player_data) => {
 
     player_stats.gamesplayed = stats_object.games;
     player_stats.goals = stats_object.goals;
-    player_stats.assists = stats_object.goals;
+    player_stats.assists = stats_object.assists;
     player_stats.points = stats_object.points;
     player_stats.pointspergame = ppg;
     player_stats.projected = await projectedPoints(team_id, stats_object.games, stats_object.points)
